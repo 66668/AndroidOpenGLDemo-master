@@ -1,12 +1,13 @@
 /*
  *
  * Triangle.java
- * 
+ *
  * Created by Wuwang on 2016/9/30
  */
 package edu.wuwang.opengl.render;
 
 import android.opengl.GLES20;
+import android.util.Log;
 import android.view.View;
 
 import java.nio.ByteBuffer;
@@ -21,6 +22,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class Triangle extends Shape {
 
+    private static final String TAG = "Triangle";
     private FloatBuffer vertexBuffer;
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
@@ -38,8 +40,9 @@ public class Triangle extends Shape {
     private int mProgram;
 
     static final int COORDS_PER_VERTEX = 3;
+    //三角形 坐标位置
     static float triangleCoords[] = {
-            0.5f,  0.5f, 0.0f, // top
+            0.5f, 0.5f, 0.0f, // top
             -0.5f, -0.5f, 0.0f, // bottom left
             0.5f, -0.5f, 0.0f  // bottom right
     };
@@ -47,7 +50,7 @@ public class Triangle extends Shape {
     private int mPositionHandle;
     private int mColorHandle;
 
-    private float[] mViewMatrix=new float[16];
+    private float[] mViewMatrix = new float[16];
 
     //顶点个数
     private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
@@ -57,22 +60,22 @@ public class Triangle extends Shape {
     private int mMatrixHandler;
 
     //设置颜色，依次为红绿蓝和透明通道
-    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float color[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
     public Triangle(View mView) {
         super(mView);
-        ByteBuffer bb = ByteBuffer.allocateDirect(
-                triangleCoords.length * 4);
+        Log.e(TAG, "Triangle");
+        ByteBuffer bb = ByteBuffer.allocateDirect(triangleCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
 
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(triangleCoords);
         vertexBuffer.position(0);
-        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,
-                vertexShaderCode);
-        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,
-                fragmentShaderCode);
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
+        //设置背景色
+        GLES20.glClearColor(1f, 1f, 0.5f, 1.0f);
         //创建一个空的OpenGLES程序
         mProgram = GLES20.glCreateProgram();
         //将顶点着色器加入到程序
@@ -85,17 +88,17 @@ public class Triangle extends Shape {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
+        Log.e(TAG, "onSurfaceCreated");
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-
+        Log.e(TAG, "onSurfaceChanged");
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-
+        Log.e(TAG, "onDrawFrame");
         //将程序加入到OpenGLES2.0环境
         GLES20.glUseProgram(mProgram);
 
@@ -104,9 +107,13 @@ public class Triangle extends Shape {
         //启用三角形顶点的句柄
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         //准备三角形的坐标数据
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
-                GLES20.GL_FLOAT, false,
-                vertexStride, vertexBuffer);
+        GLES20.glVertexAttribPointer(mPositionHandle,
+                COORDS_PER_VERTEX,
+                GLES20.GL_FLOAT,
+                false,
+                vertexStride,
+                vertexBuffer);
+
         //获取片元着色器的vColor成员的句柄
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
         //设置绘制三角形的颜色

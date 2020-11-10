@@ -100,6 +100,7 @@ public class Oval extends Shape {
         this.radius=radius;
     }
 
+    //创建圆形数据
     private float[]  createPositions(){
         ArrayList<Float> data=new ArrayList<>();
         data.add(0.0f);             //设置圆心坐标
@@ -152,9 +153,12 @@ public class Oval extends Shape {
         //启用三角形顶点的句柄
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         //准备三角形的坐标数据
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
-                GLES20.GL_FLOAT, false,
-                vertexStride, vertexBuffer);
+        GLES20.glVertexAttribPointer(mPositionHandle,
+                COORDS_PER_VERTEX,
+                GLES20.GL_FLOAT,
+                false,
+                vertexStride,
+                vertexBuffer);
         //获取片元着色器的vColor成员的句柄
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
         //设置绘制三角形的颜色

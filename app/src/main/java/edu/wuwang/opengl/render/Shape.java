@@ -22,7 +22,7 @@ public abstract class Shape implements GLSurfaceView.Renderer {
     }
 
     public int loadShader(int type, String shaderCode){
-        //根据type创建顶点着色器或者片元着色器
+        //根据type创建 顶点着色器 或者 片元着色器
         int shader = GLES20.glCreateShader(type);
         //将资源加入到着色器中，并编译
         GLES20.glShaderSource(shader, shaderCode);

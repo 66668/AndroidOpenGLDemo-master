@@ -6,23 +6,14 @@
  */
 package edu.wuwang.opengl.image;
 
-import android.app.Activity;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
-import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.wuwang.opengl.BaseActivity;
 import edu.wuwang.opengl.R;
 import edu.wuwang.opengl.image.filter.ColorFilter;
-import edu.wuwang.opengl.image.filter.ContrastColorFilter;
+import edu.wuwang.opengl.image.filter.FilterEnum;
 
 /**
  * Description:
@@ -70,22 +61,22 @@ public class SGLViewActivity extends BaseActivity{
                 mGLView.getRender().refresh();
                 break;
             case R.id.mDefault:
-                mGLView.setFilter(new ContrastColorFilter(this, ColorFilter.Filter.NONE));
+                mGLView.setFilter(new ColorFilter(this, FilterEnum.NONE));
                 break;
             case R.id.mGray:
-                mGLView.setFilter(new ContrastColorFilter(this, ColorFilter.Filter.GRAY));
+                mGLView.setFilter(new ColorFilter(this, FilterEnum.GRAY));
                 break;
             case R.id.mCool:
-                mGLView.setFilter(new ContrastColorFilter(this, ColorFilter.Filter.COOL));
+                mGLView.setFilter(new ColorFilter(this, FilterEnum.COOL));
                 break;
             case R.id.mWarm:
-                mGLView.setFilter(new ContrastColorFilter(this, ColorFilter.Filter.WARM));
+                mGLView.setFilter(new ColorFilter(this, FilterEnum.WARM));
                 break;
             case R.id.mBlur:
-                mGLView.setFilter(new ContrastColorFilter(this, ColorFilter.Filter.BLUR));
+                mGLView.setFilter(new ColorFilter(this, FilterEnum.BLUR));
                 break;
             case R.id.mMagn:
-                mGLView.setFilter(new ContrastColorFilter(this, ColorFilter.Filter.MAGN));
+                mGLView.setFilter(new ColorFilter(this, FilterEnum.MAGN));
                 break;
 
         }

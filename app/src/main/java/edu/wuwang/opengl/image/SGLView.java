@@ -15,7 +15,6 @@ import android.util.AttributeSet;
 import java.io.IOException;
 
 import edu.wuwang.opengl.image.filter.AFilter;
-import edu.wuwang.opengl.image.filter.ColorFilter;
 
 /**
  * Description:

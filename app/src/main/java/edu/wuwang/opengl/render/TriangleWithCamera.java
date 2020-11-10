@@ -8,6 +8,7 @@ package edu.wuwang.opengl.render;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 import android.view.View;
 
 import java.nio.ByteBuffer;
@@ -22,6 +23,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class TriangleWithCamera extends Shape {
 
+    private static final String TAG = "正三角";
     private FloatBuffer vertexBuffer;
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
@@ -65,17 +67,14 @@ public class TriangleWithCamera extends Shape {
 
     public TriangleWithCamera(View mView) {
         super(mView);
-        ByteBuffer bb = ByteBuffer.allocateDirect(
-                triangleCoords.length * 4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(triangleCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
 
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(triangleCoords);
         vertexBuffer.position(0);
-        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,
-                vertexShaderCode);
-        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,
-                fragmentShaderCode);
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         //创建一个空的OpenGLES程序
         mProgram = GLES20.glCreateProgram();
@@ -89,11 +88,12 @@ public class TriangleWithCamera extends Shape {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
+        Log.e(TAG, "onSurfaceCreated");
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        Log.e(TAG, "onSurfaceChanged");
         //计算宽高比
         float ratio=(float)width/height;
         //设置透视投影
@@ -106,6 +106,8 @@ public class TriangleWithCamera extends Shape {
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        Log.e(TAG, "onDrawFrame");
+
         //将程序加入到OpenGLES2.0环境
         GLES20.glUseProgram(mProgram);
         //获取变换矩阵vMatrix成员句柄

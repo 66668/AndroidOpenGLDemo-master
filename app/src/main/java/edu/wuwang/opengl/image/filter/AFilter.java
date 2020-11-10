@@ -12,6 +12,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -27,6 +28,7 @@ import edu.wuwang.opengl.utils.ShaderUtils;
  */
 public abstract class AFilter implements GLSurfaceView.Renderer {
 
+    private static final String  TAG = "AFilter";
     private Context mContext;
     private int mProgram;
     private int glHPosition;
@@ -69,11 +71,13 @@ public abstract class AFilter implements GLSurfaceView.Renderer {
         this.mContext=context;
         this.vertex=vertex;
         this.fragment=fragment;
+
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
         bPos=bb.asFloatBuffer();
         bPos.put(sPos);
         bPos.position(0);
+
         ByteBuffer cc=ByteBuffer.allocateDirect(sCoord.length*4);
         cc.order(ByteOrder.nativeOrder());
         bCoord=cc.asFloatBuffer();
@@ -95,22 +99,27 @@ public abstract class AFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        Log.e(TAG,"onSurfaceCreated");
+        //设置背景色
         GLES20.glClearColor(1.0f,1.0f,1.0f,1.0f);
+        //
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
         mProgram=ShaderUtils.createProgram(mContext.getResources(),vertex,fragment);
+        //获取成员的句柄
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
         glHMatrix=GLES20.glGetUniformLocation(mProgram,"vMatrix");
         hIsHalf=GLES20.glGetUniformLocation(mProgram,"vIsHalf");
         glHUxy=GLES20.glGetUniformLocation(mProgram,"uXY");
-        onDrawCreatedSet(mProgram);
+        onSurfaceCreated(mProgram);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        GLES20.glViewport(0,0,width,height);
+        Log.e(TAG,"onSurfaceChanged");
 
+        GLES20.glViewport(0,0,width,height);
         int w=mBitmap.getWidth();
         int h=mBitmap.getHeight();
         float sWH=w/(float)h;
@@ -137,9 +146,11 @@ public abstract class AFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        Log.e(TAG,"onDrawFrame");
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
-        onDrawSet();
+        onDrawFrame();
         GLES20.glUniform1i(hIsHalf,isHalf?1:0);
         GLES20.glUniform1f(glHUxy,uXY);
         GLES20.glUniformMatrix4fv(glHMatrix,1,false,mMVPMatrix,0);
@@ -152,8 +163,8 @@ public abstract class AFilter implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
     }
 
-    public abstract void onDrawSet();
-    public abstract void onDrawCreatedSet(int mProgram);
+    public abstract void onDrawFrame();
+    public abstract void onSurfaceCreated(int mProgram);
 
     private int createTexture(){
         int[] texture=new int[1];

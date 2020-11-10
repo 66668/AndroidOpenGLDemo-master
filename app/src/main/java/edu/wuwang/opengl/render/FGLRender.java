@@ -17,11 +17,12 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Description:
+ * Description: 绘图基类，设置新图形后，在这里初始化新图行的绘制。
  */
 public class FGLRender extends Shape {
 
     private Shape shape;
+    private static final String  TAG = "FGLRender";
     private Class<? extends Shape> clazz=Cube.class;
 
     public FGLRender(View mView) {
@@ -35,7 +36,7 @@ public class FGLRender extends Shape {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(0.5f,0.5f,0.5f,1.0f);
-        Log.e("wuwang","onSurfaceCreated");
+        Log.e(TAG,"onSurfaceCreated");
         try {
             Constructor constructor=clazz.getDeclaredConstructor(View.class);
             constructor.setAccessible(true);
@@ -49,7 +50,7 @@ public class FGLRender extends Shape {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        Log.e("wuwang","onSurfaceChanged");
+        Log.e(TAG,"onSurfaceChanged");
         GLES20.glViewport(0,0,width,height);
 
         shape.onSurfaceChanged(gl, width, height);
@@ -57,7 +58,7 @@ public class FGLRender extends Shape {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        Log.e("wuwang","onDrawFrame");
+        Log.e(TAG,"onDrawFrame");
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         shape.onDrawFrame(gl);
     }
